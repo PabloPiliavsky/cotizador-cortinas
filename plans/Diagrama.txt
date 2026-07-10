@@ -1,0 +1,75 @@
+1. anchoFinal =
+   si tiene guía:
+      ancho inicial ajustado según modelo de guía / tubo
+   si no tiene guía:
+      ancho inicial
+
+2. altoTotalLamas =
+   si tiene vuelo:
+      alto inicial + vuelo
+   si no tiene vuelo:
+      alto inicial
+
+3. cantidadLamas =
+   altoTotalLamas x lamasPorMetro
+
+Ejemplo de la nota:
+3,30 m x 13 lamas por metro = 42,9
+Se redondea a 43 lamas
+
+4. metrosLinealesLamas =
+   cantidadLamas x anchoFinal
+
+Ejemplo:
+43 lamas x 3,48 m = 149,64 m lineales
+Se puede redondear a 150 m lineales
+
+5. costoLamas =
+   metrosLinealesLamas x precioMetroLinealLama
+
+Ejemplo:
+150 x 2200 = 330.000
+
+6. costoTubo =
+   anchoFinal x precioMetroLinealTubo
+
+7. costoGuias =
+   si tiene guía:
+      2 x altoGuia x precioMetroLinealGuia
+   si no:
+      0
+
+Nota:
+La guía se calcula por 2 porque son pares de guías.
+
+8. costoMotor =
+   precio fijo del modelo de motor seleccionado
+
+9. costoAccesorios =
+   suma de accesorios compatibles con el motor elegido
+
+10. subtotalMateriales =
+   costoLamas
+   + costoTubo
+   + costoGuias
+   + costoMotor
+   + costoAccesorios
+
+11. costoColocacion =
+   si incluye colocación:
+      precio fijo o fórmula definida en datos maestros
+   si no:
+      0
+
+12. subtotalAntesDeMargen =
+   subtotalMateriales + costoColocacion
+
+13. margenComercial =
+   según tipo de cliente:
+      gremio: 60%
+      público general: 80%
+
+14. totalFinal =
+   subtotalAntesDeMargen
+   + margenComercial
+   - descuento, si corresponde

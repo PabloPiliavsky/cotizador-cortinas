@@ -1,0 +1,71 @@
+{
+  "id": "plans/2026-07-10_10-00-36_cotizador-ventanas.json",
+  "metadata": {
+    "title": "Cotizador de Ventanas y Sistema de Persiana",
+    "status": "aprobado",
+    "creation_date": "2026-07-10T10:00:36-03:00",
+    "description": "Desarrollo de una Single Page Application (React, Vite, Tailwind CSS v4, shadcn/ui) para simulación, cálculo y presupuesto de persianas y aberturas con panel de administración mock CRUD con datos de Metalconf."
+  },
+  "technical_decisions": {
+    "framework": "React 19 with Vite 8 (JavaScript/JSX)",
+    "styling": "Tailwind CSS v4 + shadcn/ui for modern dark/light mode premium aesthetics",
+    "icons": "lucide-react",
+    "pdf_generation": "HTML5 print-to-pdf styling or a lightweight client-side generator to ensure premium layout",
+    "state_management": "React Context / LocalStorage for master data seed from Precios COR Metalconf PDF",
+    "architecture_adjustments": {
+      "data_separation": "Separation of Code, Name/Description, Dimensions/Measures, Unit, Price, and Slat/Guide/Tube models in CRUD.",
+      "modularization": "Strict limit of ~40 lines per function and 100 lines per file (SRP)."
+    }
+  },
+  "steps": [
+    {
+      "id": 1,
+      "name": "Inicialización del Workspace y Configuración",
+      "description": "Crear y configurar el proyecto React 19 + Vite 8 en workspace/frontend. Configurar Tailwind CSS v4 y shadcn/ui, estructurar carpetas y verificar que compile de forma básica.",
+      "status": "pending",
+      "assigned_to": "frontend_SOUL"
+    },
+    {
+      "id": 2,
+      "name": "Implementación de Datos Maestros (React Context / LocalStorage)",
+      "description": "Establecer la estructura de datos maestros precargados con los códigos, descripciones y precios reales del PDF de Metalconf (Lamas, Motores, Accesorios, Guías y Ejes).",
+      "status": "pending",
+      "assigned_to": "frontend_SOUL"
+    },
+    {
+      "id": 3,
+      "name": "CRUD de Configuración (Sección 2)",
+      "description": "Crear la vista administrativa modular utilizando componentes de shadcn/ui para la gestión (CRUD) separada de cada tabla de datos maestros.",
+      "status": "pending",
+      "assigned_to": "frontend_SOUL"
+    },
+    {
+      "id": 4,
+      "name": "Formulario de Cotización y Fórmulas de Cálculo (Sección 1)",
+      "description": "Desarrollar el formulario interactivo de cotización (Vista Cliente) aplicando las fórmulas con las guías y cajones seleccionados en tiempo real.",
+      "status": "pending",
+      "assigned_to": "frontend_SOUL"
+    },
+    {
+      "id": 5,
+      "name": "Previsualización SVG 2D Interactiva",
+      "description": "Diseñar e implementar un componente de previsualización dinámica SVG 2D modular que represente la persiana, guías y cajón según la configuración seleccionada.",
+      "status": "pending",
+      "assigned_to": "frontend_SOUL"
+    },
+    {
+      "id": 6,
+      "name": "Historial de Presupuestos y Exportación a PDF",
+      "description": "Implementar las funciones de guardar presupuestos en el historial, visualización/eliminación, y la generación de PDF con el desglose detallado de costos y diseño premium.",
+      "status": "pending",
+      "assigned_to": "frontend_SOUL"
+    },
+    {
+      "id": 7,
+      "name": "Estilización Premium (Wow Factor), QA y Síntesis",
+      "description": "Pulir la interfaz con animaciones, gradientes, modo oscuro/claro de alto contraste, realizar el build final y verificar que no existan errores.",
+      "status": "pending",
+      "assigned_to": "frontend_SOUL"
+    }
+  ]
+}

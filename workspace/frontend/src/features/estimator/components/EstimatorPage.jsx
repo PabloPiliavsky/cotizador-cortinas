@@ -45,7 +45,7 @@ export default function EstimatorPage() {
         <HistoryList />
       </div>
       <div className="flex flex-col gap-6">
-        <ShutterVisualizer hasGuides={hasGuides} hasVuelo={hasVuelo} selectedLama={selectedLama} />
+        <ShutterVisualizer hasGuides={hasGuides} hasVuelo={hasVuelo} selectedLama={selectedLama} selectedMotor={selectedMotor} width={width} height={height} selectedGuide={selectedGuide} selectedCajon={selectedCajon} selectedEje={selectedEje} selectedAccs={selectedAccs} />
         <EstimatorSummary calcs={calcs} details={details} />
       </div>
     </div>

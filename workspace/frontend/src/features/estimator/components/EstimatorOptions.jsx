@@ -1,4 +1,3 @@
-import { Checkbox } from "@/components/ui/checkbox"
 import { Label } from "@/components/ui/label"
 
 export default function EstimatorOptions({
@@ -9,8 +8,6 @@ export default function EstimatorOptions({
   motores, selectedMotor, setSelectedMotor,
   accesorios, selectedAccs, setSelectedAccs,
 }) {
-  const currentCompAccs = accesorios.filter(acc => selectedMotor?.compatibleAcc?.includes(acc.code))
-
   const handleAccChange = (acc, checked) => {
     setSelectedAccs(prev => checked ? [...prev, acc] : prev.filter(a => a.code !== acc.code))
   }
@@ -43,24 +40,37 @@ export default function EstimatorOptions({
       <div>
         <Label className="text-zinc-400">Motorización</Label>
         <select value={selectedMotor?.code || ""} onChange={(e) => {
-          const m = motores.find(mt => mt.code === e.target.value); setSelectedMotor(m); setSelectedAccs([])
+          const m = motores.find(mt => mt.code === e.target.value)
+          setSelectedMotor(m)
+          setSelectedAccs(prev => prev.filter(a => m.compatibleAcc?.includes(a.code)))
         }} className="w-full bg-zinc-900 border border-zinc-800 rounded-md p-2 text-zinc-200 text-sm">
           {motores.map(m => <option key={m.code} value={m.code}>{m.name} (${m.price})</option>)}
         </select>
       </div>
-      {currentCompAccs.length > 0 && (
-        <div className="flex flex-col gap-2">
-          <Label className="text-zinc-400">Accesorios Compatibles</Label>
-          <div className="grid grid-cols-2 gap-2">
-            {currentCompAccs.map(acc => (
-              <label key={acc.code} className="flex items-center gap-2 text-zinc-300 text-xs cursor-pointer bg-zinc-900/60 p-2 border border-zinc-800/80 rounded">
-                <input type="checkbox" checked={selectedAccs.some(a => a.code === acc.code)} onChange={(e) => handleAccChange(acc, e.target.checked)} className="rounded border-zinc-800 bg-zinc-900 accent-blue-600" />
-                {acc.name} (+${acc.price})
+      <div className="flex flex-col gap-2">
+        <Label className="text-zinc-400">Accesorios y Componentes</Label>
+        <div className="grid grid-cols-2 gap-2">
+          {accesorios.map(acc => {
+            const isCompatible = selectedMotor?.compatibleAcc?.includes(acc.code)
+            return (
+              <label key={acc.code} className={`flex items-center gap-2 text-xs p-2 border rounded transition-opacity ${
+                isCompatible 
+                  ? "bg-zinc-900/60 border-zinc-800/80 text-zinc-300 cursor-pointer" 
+                  : "bg-zinc-900/20 border-zinc-900/40 text-zinc-600 cursor-not-allowed opacity-40"
+              }`}>
+                <input 
+                  type="checkbox" 
+                  disabled={!isCompatible}
+                  checked={selectedAccs.some(a => a.code === acc.code)} 
+                  onChange={(e) => handleAccChange(acc, e.target.checked)} 
+                  className="rounded border-zinc-800 bg-zinc-900 accent-blue-600 disabled:opacity-50" 
+                />
+                <span>{acc.name} (+${acc.price})</span>
               </label>
-            ))}
-          </div>
+            )
+          })}
         </div>
-      )}
+      </div>
     </div>
   )
 }

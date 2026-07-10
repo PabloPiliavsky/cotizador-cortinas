@@ -39,7 +39,8 @@ La aplicación sigue una arquitectura modular en React 19:
 
 - `src/shared/providers/BudgetContext.jsx`: Administra el estado global de datos maestros (Lamas, Guías, Ejes, Cajones, Motores, Accesorios) y el historial de presupuestos con sincronización a `localStorage`.
 - `src/features/estimator/hooks/useShutterCalculations.js`: Hook personalizado que encapsula todas las fórmulas de dimensiones y desglose de costos.
-- `src/features/estimator/components/ShutterVisualizer.jsx`: Renderizador dinámico SVG 2D de la persiana con barra interactiva de control de apertura.
-- `src/features/estimator/components/EstimatorInputs.jsx` & `EstimatorOptions.jsx`: Formularios para parámetros de entrada y compatibilidad de motorizaciones/accesorios.
-- `src/features/estimator/components/EstimatorSummary.jsx`: Panel de resultados financieros y acciones de persistencia.
+- `src/features/estimator/components/ShutterVisualizer.jsx`: Renderizador dinámico SVG 2D de la persiana con barra interactiva de control de apertura. Reordena las capas (lamas al fondo, eje al frente) y redibuja detalles como cojinetes, cadenas de control y accesorios dinámicamente.
+- `src/features/estimator/components/EstimatorInputs.jsx`: Administra dimensiones básicas, selección de lama, selección de eje y el checkbox de guías reubicado.
+- `src/features/estimator/components/EstimatorOptions.jsx`: Opciones de vuelos, motores y accesorios filtrados y deshabilitados condicionalmente.
+- `src/shared/utils/pdfGenerator.js`: Utilidad que genera PDF del presupuesto y dibuja vectorialmente la persiana elegida con las lamas bajas (cerrada) a escala.
 - `src/features/admin/components/`: Sub-componentes CRUD atómicos para la gestión individual de catálogos.

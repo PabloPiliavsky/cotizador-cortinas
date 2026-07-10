@@ -35,6 +35,45 @@ export function generatePDF({ client, details, calcs }) {
     doc.text(`Eje/Tubo: ${details.selectedEje?.name || "N/A"}`, 15, 122)
   }
   doc.text(`Sistema de Motorización: ${details.selectedMotor?.name || "N/A"}`, 15, 130)
+
+  // RENDER VECTOR SCHEMATIC (Persiana con lamas bajas)
+  const drawX = 145
+  const drawY = 80
+  const drawW = 45
+  const drawH = 50
+
+  // Glass background
+  doc.setFillColor(224, 242, 254)
+  doc.rect(drawX, drawY, drawW, drawH, "F")
+  doc.setDrawColor(156, 163, 175)
+  doc.rect(drawX, drawY, drawW, drawH, "S")
+
+  // Draw 10 closed slats (Lamas bajas)
+  doc.setFillColor(156, 163, 175)
+  doc.setDrawColor(75, 85, 99)
+  const slatW = details.hasGuides ? drawW + 4 : drawW
+  const slatX = details.hasGuides ? drawX - 2 : drawX
+  for (let idx = 0; idx < 10; idx++) {
+    doc.rect(slatX, drawY + idx * 5, slatW, 4.6, "FD")
+  }
+
+  // Draw Guides
+  if (details.hasGuides) {
+    doc.setFillColor(39, 39, 42)
+    doc.rect(drawX - 3, drawY, 3, drawH, "F")
+    doc.rect(drawX + drawW, drawY, 3, drawH, "F")
+  }
+
+  // Draw Shutter Box (Cajón compacto)
+  if (details.hasVuelo) {
+    doc.setFillColor(24, 24, 27)
+    doc.setDrawColor(63, 63, 70)
+    doc.rect(drawX - 5, drawY - 14, drawW + 10, 14, "FD")
+  } else {
+    // Axle Circle
+    doc.setFillColor(39, 39, 42)
+    doc.circle(drawX + drawW / 2, drawY - 7, 5, "FD")
+  }
   
   // Cost breakdown
   doc.setFont("helvetica", "bold")

@@ -40,7 +40,7 @@ export default function EstimatorPage() {
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 max-w-6xl mx-auto p-4">
       <div className="lg:col-span-2 flex flex-col gap-6">
-        <EstimatorInputs width={width} setWidth={setWidth} height={height} setHeight={setHeight} lamas={lamas} selectedLama={selectedLama} setSelectedLama={setSelectedLama} ejes={ejes} selectedEje={selectedEje} setSelectedEje={setSelectedEje} hasGuides={hasGuides} />
+        <EstimatorInputs width={width} setWidth={setWidth} height={height} setHeight={setHeight} lamas={lamas} selectedLama={selectedLama} setSelectedLama={setSelectedLama} ejes={ejes} selectedEje={selectedEje} setSelectedEje={setSelectedEje} hasGuides={hasGuides} setHasGuides={setHasGuides} />
         <EstimatorOptions hasGuides={hasGuides} setHasGuides={setHasGuides} guias={guias} selectedGuide={selectedGuide} setSelectedGuide={setSelectedGuide} hasVuelo={hasVuelo} setHasVuelo={setHasVuelo} cajones={cajones} selectedCajon={selectedCajon} setSelectedCajon={setSelectedCajon} motores={motores} selectedMotor={selectedMotor} setSelectedMotor={setSelectedMotor} accesorios={accesorios} selectedAccs={selectedAccs} setSelectedAccs={setSelectedAccs} />
         <HistoryList />
       </div>

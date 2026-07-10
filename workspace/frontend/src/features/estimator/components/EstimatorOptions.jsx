@@ -20,10 +20,6 @@ export default function EstimatorOptions({
       <h3 className="text-md font-semibold text-zinc-200">Opciones Adicionales</h3>
       <div className="flex items-center gap-6">
         <label className="flex items-center gap-2 text-zinc-300 text-sm cursor-pointer">
-          <input type="checkbox" checked={hasGuides} onChange={(e) => setHasGuides(e.target.checked)} className="rounded border-zinc-800 bg-zinc-900 accent-blue-600" />
-          ¿Lleva Guías?
-        </label>
-        <label className="flex items-center gap-2 text-zinc-300 text-sm cursor-pointer">
           <input type="checkbox" checked={hasVuelo} onChange={(e) => setHasVuelo(e.target.checked)} className="rounded border-zinc-800 bg-zinc-900 accent-blue-600" />
           ¿Lleva Vuelo?
         </label>

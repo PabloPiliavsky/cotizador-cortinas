@@ -11,6 +11,7 @@ export default function useShutterCalculations({
   selectedEje,
   selectedMotor,
   selectedAccs,
+  addVueloMeasure,
 }) {
   return useMemo(() => {
     const wInit = parseFloat(width) || 0
@@ -19,8 +20,8 @@ export default function useShutterCalculations({
     const guideWidth = hasGuides && selectedGuide ? selectedGuide.profileWidth : 0
     const wFinal = wInit + guideWidth * 2
 
-    const cajonHeight = hasVuelo && selectedCajon ? selectedCajon.heightAdjustment : 0
-    const hFinal = hInit + cajonHeight
+    // Si lleva vuelo y se decide sumar medida de vuelo, se suman 0.40m fijos al alto final.
+    const hFinal = hInit + (hasVuelo && addVueloMeasure ? 0.40 : 0)
 
     const usefulH = selectedLama ? selectedLama.usefulHeight : 0.05
     const slatsQty = usefulH > 0 ? Math.ceil(hFinal / usefulH) : 0
@@ -29,10 +30,14 @@ export default function useShutterCalculations({
 
     const slatsCost = slatsQty * wFinal * (selectedLama?.price || 0)
     const guidesCost = hasGuides ? guideLen * (selectedGuide?.price || 0) : 0
-    const ejeCost = hasGuides && selectedEje ? selectedEje.price : 0
+    
+    // El eje y cajón se cobran siempre que lleva vuelo (hasVuelo === true)
+    const ejeCost = hasVuelo && selectedEje ? selectedEje.price : 0
+    const cajonCost = hasVuelo && selectedCajon ? selectedCajon.price : 0
+    
     const motorCost = selectedMotor ? selectedMotor.price : 0
     const accsCost = selectedAccs.reduce((sum, item) => sum + item.price, 0)
-    const total = slatsCost + guidesCost + ejeCost + motorCost + accsCost
+    const total = slatsCost + guidesCost + ejeCost + cajonCost + motorCost + accsCost
 
     return {
       wFinal,
@@ -42,6 +47,7 @@ export default function useShutterCalculations({
       slatsCost,
       guidesCost,
       ejeCost,
+      cajonCost,
       motorCost,
       accsCost,
       total,
@@ -57,5 +63,7 @@ export default function useShutterCalculations({
     selectedEje,
     selectedMotor,
     selectedAccs,
+    addVueloMeasure,
   ])
 }
+

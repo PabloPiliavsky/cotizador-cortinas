@@ -14,6 +14,7 @@ export default function EstimatorPage() {
   const [height, setHeight] = useState("2.00")
   const [hasGuides, setHasGuides] = useState(true)
   const [hasVuelo, setHasVuelo] = useState(true)
+  const [addVueloMeasure, setAddVueloMeasure] = useState(false)
 
   const [selectedLama, setSelectedLama] = useState(null)
   const [selectedEje, setSelectedEje] = useState(null)
@@ -32,16 +33,16 @@ export default function EstimatorPage() {
 
   const calcs = useShutterCalculations({
     width, height, hasGuides, selectedGuide, hasVuelo, selectedCajon,
-    selectedLama, selectedEje, selectedMotor, selectedAccs
+    selectedLama, selectedEje, selectedMotor, selectedAccs, addVueloMeasure
   })
 
-  const details = { width, height, hasGuides, selectedGuide, hasVuelo, selectedCajon, selectedLama, selectedEje, selectedMotor }
+  const details = { width, height, hasGuides, selectedGuide, hasVuelo, selectedCajon, selectedLama, selectedEje, selectedMotor, addVueloMeasure }
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 max-w-6xl mx-auto p-4">
       <div className="lg:col-span-2 flex flex-col gap-6">
-        <EstimatorInputs width={width} setWidth={setWidth} height={height} setHeight={setHeight} lamas={lamas} selectedLama={selectedLama} setSelectedLama={setSelectedLama} ejes={ejes} selectedEje={selectedEje} setSelectedEje={setSelectedEje} hasGuides={hasGuides} setHasGuides={setHasGuides} />
-        <EstimatorOptions hasGuides={hasGuides} setHasGuides={setHasGuides} guias={guias} selectedGuide={selectedGuide} setSelectedGuide={setSelectedGuide} hasVuelo={hasVuelo} setHasVuelo={setHasVuelo} cajones={cajones} selectedCajon={selectedCajon} setSelectedCajon={setSelectedCajon} motores={motores} selectedMotor={selectedMotor} setSelectedMotor={setSelectedMotor} accesorios={accesorios} selectedAccs={selectedAccs} setSelectedAccs={setSelectedAccs} />
+        <EstimatorInputs width={width} setWidth={setWidth} height={height} setHeight={setHeight} lamas={lamas} selectedLama={selectedLama} setSelectedLama={setSelectedLama} hasGuides={hasGuides} setHasGuides={setHasGuides} guias={guias} selectedGuide={selectedGuide} setSelectedGuide={setSelectedGuide} />
+        <EstimatorOptions hasVuelo={hasVuelo} setHasVuelo={setHasVuelo} addVueloMeasure={addVueloMeasure} setAddVueloMeasure={setAddVueloMeasure} cajones={cajones} selectedCajon={selectedCajon} setSelectedCajon={setSelectedCajon} ejes={ejes} selectedEje={selectedEje} setSelectedEje={setSelectedEje} motores={motores} selectedMotor={selectedMotor} setSelectedMotor={setSelectedMotor} accesorios={accesorios} selectedAccs={selectedAccs} setSelectedAccs={setSelectedAccs} />
         <HistoryList />
       </div>
       <div className="flex flex-col gap-6">
@@ -51,3 +52,4 @@ export default function EstimatorPage() {
     </div>
   )
 }
+

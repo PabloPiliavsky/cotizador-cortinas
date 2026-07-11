@@ -1,10 +1,10 @@
 import { Label } from "@/components/ui/label"
 
 export default function EstimatorOptions({
-  hasGuides, setHasGuides,
-  guias, selectedGuide, setSelectedGuide,
   hasVuelo, setHasVuelo,
+  addVueloMeasure, setAddVueloMeasure,
   cajones, selectedCajon, setSelectedCajon,
+  ejes, selectedEje, setSelectedEje,
   motores, selectedMotor, setSelectedMotor,
   accesorios, selectedAccs, setSelectedAccs,
 }) {
@@ -15,39 +15,53 @@ export default function EstimatorOptions({
   return (
     <div className="flex flex-col gap-4 bg-zinc-950/40 p-4 border border-zinc-800 rounded-lg">
       <h3 className="text-md font-semibold text-zinc-200">Opciones Adicionales</h3>
-      <div className="flex items-center gap-6">
-        <label className="flex items-center gap-2 text-zinc-300 text-sm cursor-pointer">
-          <input type="checkbox" checked={hasVuelo} onChange={(e) => setHasVuelo(e.target.checked)} className="rounded border-zinc-800 bg-zinc-900 accent-blue-600" />
-          ¿Lleva Vuelo?
-        </label>
+      
+      <div className="flex flex-col gap-3">
+        <div className="flex items-center gap-2 text-zinc-300 text-sm cursor-pointer">
+          <input type="checkbox" id="vuelo-check" checked={hasVuelo} onChange={(e) => {
+            setHasVuelo(e.target.checked)
+            if (!e.target.checked) setAddVueloMeasure(false)
+          }} className="rounded border-zinc-800 bg-zinc-900 accent-blue-600" />
+          <label htmlFor="vuelo-check" className="cursor-pointer font-medium">¿Lleva Vuelo?</label>
+        </div>
+
+        {hasVuelo && (
+          <div className="pl-5 flex flex-col gap-3 border-l border-zinc-800/80">
+            <div className="flex items-center gap-2 text-zinc-400 text-xs cursor-pointer">
+              <input type="checkbox" id="add-vuelo-measure" checked={addVueloMeasure} onChange={(e) => setAddVueloMeasure(e.target.checked)} className="rounded border-zinc-800 bg-zinc-900 accent-blue-600" />
+              <label htmlFor="add-vuelo-measure" className="cursor-pointer">¿Sumar medida de vuelo al alto (+40 cm)?</label>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mt-1">
+              <div>
+                <Label className="text-zinc-400 text-xs">Modelo de Cajón (Vuelo)</Label>
+                <select value={selectedCajon?.code || ""} onChange={(e) => setSelectedCajon(cajones.find(c => c.code === e.target.value))} className="w-full bg-zinc-900 border border-zinc-800 rounded-md p-2 text-zinc-200 text-sm mt-1">
+                  {cajones.map(c => <option key={c.code} value={c.code}>{c.name} (${c.price})</option>)}
+                </select>
+              </div>
+              <div>
+                <Label className="text-zinc-400 text-xs">Modelo de Eje/Tubo</Label>
+                <select value={selectedEje?.code || ""} onChange={(e) => setSelectedEje(ejes.find(x => x.code === e.target.value))} className="w-full bg-zinc-900 border border-zinc-800 rounded-md p-2 text-zinc-200 text-sm mt-1">
+                  {ejes.map(x => <option key={x.code} value={x.code}>{x.name} (${x.price})</option>)}
+                </select>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
-      {hasGuides && (
-        <div>
-          <Label className="text-zinc-400">Modelo de Guía</Label>
-          <select value={selectedGuide?.code || ""} onChange={(e) => setSelectedGuide(guias.find(g => g.code === e.target.value))} className="w-full bg-zinc-900 border border-zinc-800 rounded-md p-2 text-zinc-200 text-sm">
-            {guias.map(g => <option key={g.code} value={g.code}>{g.name} (${g.price}/m)</option>)}
-          </select>
-        </div>
-      )}
-      {hasVuelo && (
-        <div>
-          <Label className="text-zinc-400">Modelo de Cajón (Vuelo)</Label>
-          <select value={selectedCajon?.code || ""} onChange={(e) => setSelectedCajon(cajones.find(c => c.code === e.target.value))} className="w-full bg-zinc-900 border border-zinc-800 rounded-md p-2 text-zinc-200 text-sm">
-            {cajones.map(c => <option key={c.code} value={c.code}>{c.name} (${c.price})</option>)}
-          </select>
-        </div>
-      )}
-      <div>
+
+      <div className="border-t border-zinc-800/60 pt-3">
         <Label className="text-zinc-400">Motorización</Label>
         <select value={selectedMotor?.code || ""} onChange={(e) => {
           const m = motores.find(mt => mt.code === e.target.value)
           setSelectedMotor(m)
           setSelectedAccs(prev => prev.filter(a => m.compatibleAcc?.includes(a.code)))
-        }} className="w-full bg-zinc-900 border border-zinc-800 rounded-md p-2 text-zinc-200 text-sm">
+        }} className="w-full bg-zinc-900 border border-zinc-800 rounded-md p-2 text-zinc-200 text-sm mt-1">
           {motores.map(m => <option key={m.code} value={m.code}>{m.name} (${m.price})</option>)}
         </select>
       </div>
-      <div className="flex flex-col gap-2">
+
+      <div className="flex flex-col gap-2 border-t border-zinc-800/60 pt-3">
         <Label className="text-zinc-400">Accesorios y Componentes</Label>
         <div className="grid grid-cols-2 gap-2">
           {accesorios.map(acc => {
@@ -74,3 +88,4 @@ export default function EstimatorOptions({
     </div>
   )
 }
+

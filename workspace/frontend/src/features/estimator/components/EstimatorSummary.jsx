@@ -19,7 +19,7 @@ export default function EstimatorSummary({
   const [client, setClient] = useState("")
 
   // Calcular el total general sumando el total marcado de cada cortina en la lista
-  const grandTotal = items.reduce((sum, item) => sum + (item.calcs.total * marginFactor * item.qty), 0)
+  const grandTotal = items.reduce((sum, item) => sum + ((item.calcs?.total || 0) * marginFactor * item.qty), 0)
 
   const activeMargin = margins.find(m => m.id === selectedMarginId)
   const activeMarginName = selectedMarginId === "custom" 
@@ -100,7 +100,7 @@ export default function EstimatorSummary({
           items.map(item => (
             <div key={item.id} className="flex justify-between">
               <span>{item.name} ({item.qty} un)</span>
-              <span className="font-mono text-zinc-300">${(item.calcs.total * marginFactor * item.qty).toFixed(2)}</span>
+              <span className="font-mono text-zinc-300">${((item.calcs?.total || 0) * marginFactor * item.qty).toFixed(2)}</span>
             </div>
           ))
         )}

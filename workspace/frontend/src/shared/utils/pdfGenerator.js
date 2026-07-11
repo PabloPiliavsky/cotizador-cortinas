@@ -79,10 +79,11 @@ export function generatePDF({ client, items, marginName, marginFactor }) {
     }
 
     // Dibujar recuadro de la cortina
+    const finalBoxHeight = Math.max(38, neededSpace - 5)
     doc.setFillColor(248, 250, 252)
-    doc.rect(15, y, 180, neededSpace - 5, "F")
+    doc.rect(15, y, 180, finalBoxHeight, "F")
     doc.setDrawColor(226, 232, 240)
-    doc.rect(15, y, 180, neededSpace - 5, "S")
+    doc.rect(15, y, 180, finalBoxHeight, "S")
 
     doc.setFont("helvetica", "bold")
     doc.setFontSize(10)
@@ -124,16 +125,54 @@ export function generatePDF({ client, items, marginName, marginFactor }) {
       compY += 5
     }
 
-    // Precio Unitario y Subtotal al costado derecho
+    // --- DIBUJAR REPRESENTACIÓN VECTORIAL EN EL PDF ---
+    // Colocamos el diagrama a la derecha del recuadro
+    const drawX = 160
+    const drawY = y + 12
+    const drawW = 25
+    const drawH = 22
+
+    // Fondo del vidrio
+    doc.setFillColor(224, 242, 254)
+    doc.rect(drawX, drawY, drawW, drawH, "F")
+    doc.setDrawColor(186, 230, 253)
+    doc.rect(drawX, drawY, drawW, drawH, "S")
+
+    // Lamas
+    doc.setFillColor(148, 163, 184)
+    doc.setDrawColor(100, 116, 139)
+    const slatW = item.details.hasGuides ? drawW + 2 : drawW
+    const slatX = item.details.hasGuides ? drawX - 1 : drawX
+    for (let idx = 0; idx < 6; idx++) {
+      doc.rect(slatX, drawY + idx * 3.5, slatW, 3, "FD")
+    }
+
+    // Guías
+    if (item.details.hasGuides) {
+      doc.setFillColor(71, 85, 105)
+      doc.rect(drawX - 2.5, drawY, 2.5, drawH, "F")
+      doc.rect(drawX + drawW, drawY, 2.5, drawH, "F")
+    }
+
+    // Cajón Compacto o Eje
+    if (item.details.hasVuelo) {
+      doc.setFillColor(30, 41, 59)
+      doc.rect(drawX - 3.5, drawY - 7, drawW + 7, 7, "F")
+    } else {
+      doc.setFillColor(148, 163, 184)
+      doc.circle(drawX + drawW / 2, drawY - 3.5, 3, "F")
+    }
+
+    // Precio Unitario y Subtotal al costado central derecho
     doc.setFont("helvetica", "bold")
+    doc.setFontSize(8)
+    doc.text(`Unit: $${unitPrice.toFixed(2)}`, 115, y + 8)
     doc.setFontSize(9)
-    doc.text(`Unitario: $${unitPrice.toFixed(2)}`, 140, y + 8)
-    doc.setFontSize(10)
     doc.setTextColor(37, 99, 235)
-    doc.text(`Subtotal: $${itemTotal.toFixed(2)}`, 140, y + 14)
+    doc.text(`Sub: $${itemTotal.toFixed(2)}`, 115, y + 13)
     doc.setTextColor(30, 41, 59)
 
-    y += neededSpace
+    y += Math.max(neededSpace, 43)
   })
 
   // Grand Total

@@ -5,6 +5,7 @@ import GuiaCrudTable from "./GuiaCrudTable"
 import CajonCrudTable from "./CajonCrudTable"
 import MotorCrudTable from "./MotorCrudTable"
 import AccesorioCrudTable from "./AccesorioCrudTable"
+import MargenCrudTable from "./MargenCrudTable"
 
 export default function ConfigCrud() {
   return (
@@ -18,6 +19,7 @@ export default function ConfigCrud() {
           <TabsTrigger value="cajones" className="text-zinc-200 data-[state=active]:bg-white data-[state=active]:text-zinc-950">Cajones</TabsTrigger>
           <TabsTrigger value="motores" className="text-zinc-200 data-[state=active]:bg-white data-[state=active]:text-zinc-950">Motores</TabsTrigger>
           <TabsTrigger value="accesorios" className="text-zinc-200 data-[state=active]:bg-white data-[state=active]:text-zinc-950">Accesorios</TabsTrigger>
+          <TabsTrigger value="margenes" className="text-zinc-200 data-[state=active]:bg-white data-[state=active]:text-zinc-950">Márgenes</TabsTrigger>
         </TabsList>
         <TabsContent value="lamas"><LamaCrudTable /></TabsContent>
         <TabsContent value="ejes"><EjeCrudTable /></TabsContent>
@@ -25,7 +27,9 @@ export default function ConfigCrud() {
         <TabsContent value="cajones"><CajonCrudTable /></TabsContent>
         <TabsContent value="motores"><MotorCrudTable /></TabsContent>
         <TabsContent value="accesorios"><AccesorioCrudTable /></TabsContent>
+        <TabsContent value="margenes"><MargenCrudTable /></TabsContent>
       </Tabs>
     </div>
   )
 }
+

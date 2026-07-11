@@ -1,11 +1,11 @@
 export const initialLamas = [
-  { code: "COR061", name: "Tablilla Ciega Galv 0,55", unit: "MTS", usefulHeight: 0.055, price: 1.90 },
-  { code: "COR050", name: "Tablilla Ciega Galv 0,75", unit: "MTS", usefulHeight: 0.075, price: 2.34 },
-  { code: "COR053", name: "Tablilla Ciega Galv 0,95", unit: "MTS", usefulHeight: 0.095, price: 3.02 },
-  { code: "COR110", name: "Tablilla Ciega D.N. 0,95 120mm", unit: "MTS", usefulHeight: 0.120, price: 3.86 },
-  { code: "COR051", name: "Tablilla Perf Galv 0,75", unit: "MTS", usefulHeight: 0.075, price: 2.53 },
-  { code: "COR055", name: "Tablilla Perf Galv 0,95", unit: "MTS", usefulHeight: 0.095, price: 3.28 },
-  { code: "COR137", name: "Tablilla Esterilla Galv 0,9", unit: "MTS", usefulHeight: 0.090, price: 3.83 }
+  { code: "COR061", name: "Tablilla Ciega Galv 0,55", unit: "MTS", usefulHeight: 0.055, price: 1.90, requiredGasketCode: "" },
+  { code: "COR050", name: "Tablilla Ciega Galv 0,75", unit: "MTS", usefulHeight: 0.075, price: 2.34, requiredGasketCode: "BUR001" },
+  { code: "COR053", name: "Tablilla Ciega Galv 0,95", unit: "MTS", usefulHeight: 0.095, price: 3.02, requiredGasketCode: "BUR001" },
+  { code: "COR110", name: "Tablilla Ciega D.N. 0,95 120mm", unit: "MTS", usefulHeight: 0.120, price: 3.86, requiredGasketCode: "BUR002" },
+  { code: "COR051", name: "Tablilla Perf Galv 0,75", unit: "MTS", usefulHeight: 0.075, price: 2.53, requiredGasketCode: "BUR002" },
+  { code: "COR055", name: "Tablilla Perf Galv 0,95", unit: "MTS", usefulHeight: 0.095, price: 3.28, requiredGasketCode: "" },
+  { code: "COR137", name: "Tablilla Esterilla Galv 0,9", unit: "MTS", usefulHeight: 0.090, price: 3.83, requiredGasketCode: "" }
 ]
 
 export const initialEjes = [
@@ -29,9 +29,9 @@ export const initialCajones = [
 ]
 
 export const initialMotores = [
-  { code: "MOT001", name: "Manual (Polea/Cinta)", price: 0.00, compatibleAcc: ["FUN012", "COR048"] },
-  { code: "MOT002", name: "Eléctrico Estándar Somfy", price: 120.00, compatibleAcc: ["FUN012", "ACC002"] },
-  { code: "MOT003", name: "Eléctrico Inteligente Somfy IO", price: 250.00, compatibleAcc: ["FUN013", "ACC001"] }
+  { code: "MOT001", name: "Manual (Polea/Cinta)", price: 0.00, compatibleAcc: ["FUN012", "COR048", "BUR001", "BUR002"] },
+  { code: "MOT002", name: "Eléctrico Estándar Somfy", price: 120.00, compatibleAcc: ["FUN012", "ACC002", "BUR001", "BUR002"] },
+  { code: "MOT003", name: "Eléctrico Inteligente Somfy IO", price: 250.00, compatibleAcc: ["FUN013", "ACC001", "BUR001", "BUR002"] }
 ]
 
 export const initialAccesorios = [
@@ -40,5 +40,13 @@ export const initialAccesorios = [
   { code: "BAN001", name: "Bandereta Corta 250x100", price: 5.35 },
   { code: "COR048", name: "Pasa Cadena", price: 5.95 },
   { code: "ACC001", name: "Mando a distancia 1 Canal", price: 35.00 },
-  { code: "ACC002", name: "Pulsador de pared", price: 15.00 }
+  { code: "ACC002", name: "Pulsador de pared", price: 15.00 },
+  { code: "BUR001", name: "Burlete de Goma para Zócalo", price: 4.50 },
+  { code: "BUR002", name: "Burlete de Felpa Silenciadora", price: 3.20 }
 ]
+
+export const initialMargins = [
+  { id: "gremio", name: "Gremio", percentage: 60 },
+  { id: "cliente", name: "Cliente", percentage: 80 }
+]
+

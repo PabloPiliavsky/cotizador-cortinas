@@ -6,6 +6,7 @@ import {
   initialCajones,
   initialMotores,
   initialAccesorios,
+  initialMargins,
 } from "../utils/seedData"
 
 const BudgetContext = createContext()
@@ -22,6 +23,7 @@ export function BudgetProvider({ children }) {
   const [cajones, setCajones] = useState(() => getStored("cajones", initialCajones))
   const [motores, setMotores] = useState(() => getStored("motores", initialMotores))
   const [accesorios, setAccesorios] = useState(() => getStored("accesorios", initialAccesorios))
+  const [margins, setMargins] = useState(() => getStored("margins", initialMargins))
   const [history, setHistory] = useState(() => getStored("budget_history", []))
 
   useEffect(() => {
@@ -31,7 +33,8 @@ export function BudgetProvider({ children }) {
     localStorage.setItem("cajones", JSON.stringify(cajones))
     localStorage.setItem("motores", JSON.stringify(motores))
     localStorage.setItem("accesorios", JSON.stringify(accesorios))
-  }, [lamas, ejes, guias, cajones, motores, accesorios])
+    localStorage.setItem("margins", JSON.stringify(margins))
+  }, [lamas, ejes, guias, cajones, motores, accesorios, margins])
 
   useEffect(() => {
     localStorage.setItem("budget_history", JSON.stringify(history))
@@ -57,6 +60,7 @@ export function BudgetProvider({ children }) {
         cajones, setCajones,
         motores, setMotores,
         accesorios, setAccesorios,
+        margins, setMargins,
         history, saveBudget, deleteBudget
       }}
     >
@@ -68,3 +72,4 @@ export function BudgetProvider({ children }) {
 export function useBudget() {
   return useContext(BudgetContext)
 }
+

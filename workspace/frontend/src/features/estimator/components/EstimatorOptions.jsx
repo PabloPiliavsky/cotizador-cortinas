@@ -7,15 +7,26 @@ export default function EstimatorOptions({
   ejes, selectedEje, setSelectedEje,
   motores, selectedMotor, setSelectedMotor,
   accesorios, selectedAccs, setSelectedAccs,
+  selectedLama,
 }) {
   const handleAccChange = (acc, checked) => {
     setSelectedAccs(prev => checked ? [...prev, acc] : prev.filter(a => a.code !== acc.code))
   }
 
+  // Validar si la lama seleccionada requiere un burlete y no hay ningún burlete (código BUR) seleccionado
+  const hasAnyGasketSelected = selectedAccs.some(a => a.code.startsWith("BUR"))
+  const isGasketRequiredButMissing = selectedLama?.requiredGasketCode && !hasAnyGasketSelected
+
   return (
     <div className="flex flex-col gap-4 bg-zinc-950/40 p-4 border border-zinc-800 rounded-lg">
       <h3 className="text-md font-semibold text-zinc-200">Opciones Adicionales</h3>
       
+      {isGasketRequiredButMissing && (
+        <div className="bg-amber-950/40 border border-amber-800/60 p-3 rounded-md text-amber-200 text-xs">
+          ⚠️ **Atención**: La lama seleccionada requiere obligatoriamente un <strong>Burlete</strong>. Por favor, selecciona al menos un tipo de burlete en los accesorios a continuación.
+        </div>
+      )}
+
       <div className="flex flex-col gap-3">
         <div className="flex items-center gap-2 text-zinc-300 text-sm cursor-pointer">
           <input type="checkbox" id="vuelo-check" checked={hasVuelo} onChange={(e) => {
@@ -88,4 +99,5 @@ export default function EstimatorOptions({
     </div>
   )
 }
+
 

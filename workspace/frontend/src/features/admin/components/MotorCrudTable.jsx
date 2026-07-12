@@ -5,19 +5,17 @@ import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 
 export default function MotorCrudTable() {
-  const { motores, setMotores } = useBudget()
+  const { motores, saveItem, deleteItem } = useBudget()
   const [newItem, setNewItem] = useState({ code: "", name: "", price: 0, compatibleAcc: "" })
 
-  const handleAdd = () => {
+  const handleAdd = async () => {
     if (!newItem.code || !newItem.name) return
     const accList = newItem.compatibleAcc.split(",").map(s => s.trim()).filter(Boolean)
-    setMotores((prev) => [...prev, { ...newItem, compatibleAcc: accList }])
+    await saveItem("motores", { ...newItem, compatibleAcc: accList })
     setNewItem({ code: "", name: "", price: 0, compatibleAcc: "" })
   }
 
-  const handleDelete = (code) => {
-    setMotores((prev) => prev.filter((item) => item.code !== code))
-  }
+  const handleDelete = (code) => deleteItem("motores", code)
 
   return (
     <div className="flex flex-col gap-4 border border-zinc-800 p-4 rounded-lg bg-zinc-950/60 backdrop-blur-md">

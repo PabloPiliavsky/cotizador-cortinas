@@ -5,18 +5,16 @@ import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 
 export default function LamaCrudTable() {
-  const { lamas, setLamas, accesorios } = useBudget()
+  const { lamas, accesorios, saveItem, deleteItem } = useBudget()
   const [newItem, setNewItem] = useState({ code: "", name: "", unit: "MTS", usefulHeight: 0.05, price: 0, requiredGasketCode: "" })
 
-  const handleAdd = () => {
+  const handleAdd = async () => {
     if (!newItem.code || !newItem.name) return
-    setLamas((prev) => [...prev, newItem])
+    await saveItem("lamas", newItem)
     setNewItem({ code: "", name: "", unit: "MTS", usefulHeight: 0.05, price: 0, requiredGasketCode: "" })
   }
 
-  const handleDelete = (code) => {
-    setLamas((prev) => prev.filter((item) => item.code !== code))
-  }
+  const handleDelete = (code) => deleteItem("lamas", code)
 
   const gaskets = accesorios.filter(a => a.code.startsWith("BUR") || a.name.toLowerCase().includes("burlete"))
 

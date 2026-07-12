@@ -5,18 +5,16 @@ import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 
 export default function CajonCrudTable() {
-  const { cajones, setCajones } = useBudget()
+  const { cajones, saveItem, deleteItem } = useBudget()
   const [newItem, setNewItem] = useState({ code: "", name: "", unit: "UN", heightAdjustment: 0.18, price: 0 })
 
-  const handleAdd = () => {
+  const handleAdd = async () => {
     if (!newItem.code || !newItem.name) return
-    setCajones((prev) => [...prev, newItem])
+    await saveItem("cajones", newItem)
     setNewItem({ code: "", name: "", unit: "UN", heightAdjustment: 0.18, price: 0 })
   }
 
-  const handleDelete = (code) => {
-    setCajones((prev) => prev.filter((item) => item.code !== code))
-  }
+  const handleDelete = (code) => deleteItem("cajones", code)
 
   return (
     <div className="flex flex-col gap-4 border border-zinc-800 p-4 rounded-lg bg-zinc-950/60 backdrop-blur-md">

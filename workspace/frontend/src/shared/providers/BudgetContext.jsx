@@ -1,4 +1,14 @@
-import { createContext, useContext, useState, useEffect } from "react"
+import { createContext, useContext, useEffect, useState } from "react"
+import {
+  collection,
+  deleteDoc,
+  doc,
+  getDoc,
+  onSnapshot,
+  setDoc,
+  writeBatch,
+} from "firebase/firestore"
+import { db } from "@/lib/firebase"
 import {
   initialLamas,
   initialEjes,
@@ -9,59 +19,128 @@ import {
   initialMargins,
 } from "../utils/seedData"
 
-const BudgetContext = createContext()
+const BudgetContext = createContext(null)
 
-function getStored(key, initial) {
-  const data = localStorage.getItem(key)
-  return data ? JSON.parse(data) : initial
+const MASTER_DATA = {
+  lamas: initialLamas,
+  ejes: initialEjes,
+  guias: initialGuias,
+  cajones: initialCajones,
+  motores: initialMotores,
+  accesorios: initialAccesorios,
+  margins: initialMargins,
+}
+
+const getItemId = (collectionName, item) =>
+  collectionName === "margins" ? item.id : item.code
+
+async function seedFirestore() {
+  const seedRef = doc(db, "app_config", "initial_data")
+  if ((await getDoc(seedRef)).exists()) return
+
+  const batch = writeBatch(db)
+  Object.entries(MASTER_DATA).forEach(([collectionName, items]) => {
+    items.forEach((item) => {
+      batch.set(doc(db, collectionName, getItemId(collectionName, item)), item)
+    })
+  })
+  batch.set(seedRef, { seeded: true, seededAt: new Date().toISOString() })
+  await batch.commit()
 }
 
 export function BudgetProvider({ children }) {
-  const [lamas, setLamas] = useState(() => getStored("lamas", initialLamas))
-  const [ejes, setEjes] = useState(() => getStored("ejes", initialEjes))
-  const [guias, setGuias] = useState(() => getStored("guias", initialGuias))
-  const [cajones, setCajones] = useState(() => getStored("cajones", initialCajones))
-  const [motores, setMotores] = useState(() => getStored("motores", initialMotores))
-  const [accesorios, setAccesorios] = useState(() => getStored("accesorios", initialAccesorios))
-  const [margins, setMargins] = useState(() => getStored("margins", initialMargins))
-  const [history, setHistory] = useState(() => getStored("budget_history", []))
+  const [data, setData] = useState(() =>
+    Object.fromEntries(Object.keys(MASTER_DATA).map((key) => [key, []])),
+  )
+  const [history, setHistory] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [databaseError, setDatabaseError] = useState(null)
 
   useEffect(() => {
-    localStorage.setItem("lamas", JSON.stringify(lamas))
-    localStorage.setItem("ejes", JSON.stringify(ejes))
-    localStorage.setItem("guias", JSON.stringify(guias))
-    localStorage.setItem("cajones", JSON.stringify(cajones))
-    localStorage.setItem("motores", JSON.stringify(motores))
-    localStorage.setItem("accesorios", JSON.stringify(accesorios))
-    localStorage.setItem("margins", JSON.stringify(margins))
-  }, [lamas, ejes, guias, cajones, motores, accesorios, margins])
+    let active = true
+    const unsubscribers = []
 
-  useEffect(() => {
-    localStorage.setItem("budget_history", JSON.stringify(history))
-  }, [history])
+    async function connect() {
+      try {
+        await seedFirestore()
+        if (!active) return
 
-  const saveBudget = (budget) => {
-    setHistory((prev) => [
-      { ...budget, id: Date.now().toString(), date: new Date().toLocaleDateString() },
-      ...prev,
-    ])
+        Object.keys(MASTER_DATA).forEach((collectionName) => {
+          unsubscribers.push(
+            onSnapshot(
+              collection(db, collectionName),
+              (snapshot) => {
+                const items = snapshot.docs.map((item) => item.data())
+                setData((current) => ({ ...current, [collectionName]: items }))
+                setLoading(false)
+              },
+              (error) => setDatabaseError(error.message),
+            ),
+          )
+        })
+
+        unsubscribers.push(
+          onSnapshot(
+            collection(db, "budget_history"),
+            (snapshot) => {
+              const budgets = snapshot.docs
+                .map((item) => ({ id: item.id, ...item.data() }))
+                .sort((a, b) => (b.createdAt ?? "").localeCompare(a.createdAt ?? ""))
+              setHistory(budgets)
+            },
+            (error) => setDatabaseError(error.message),
+          ),
+        )
+      } catch (error) {
+        if (active) {
+          setDatabaseError(error.message)
+          setLoading(false)
+        }
+      }
+    }
+
+    connect()
+    return () => {
+      active = false
+      unsubscribers.forEach((unsubscribe) => unsubscribe())
+    }
+  }, [])
+
+  const saveItem = async (collectionName, item) => {
+    const id = getItemId(collectionName, item)
+    if (!id) throw new Error("El registro necesita un identificador")
+    await setDoc(doc(db, collectionName, id), item)
   }
 
-  const deleteBudget = (id) => {
-    setHistory((prev) => prev.filter((b) => b.id !== id))
+  const deleteItem = async (collectionName, id) => {
+    await deleteDoc(doc(db, collectionName, id))
+  }
+
+  const saveBudget = async (budget) => {
+    const id = crypto.randomUUID()
+    const createdAt = new Date().toISOString()
+    await setDoc(doc(db, "budget_history", id), {
+      ...budget,
+      date: new Date().toLocaleDateString(),
+      createdAt,
+    })
+  }
+
+  const deleteBudget = async (id) => {
+    await deleteDoc(doc(db, "budget_history", id))
   }
 
   return (
     <BudgetContext.Provider
       value={{
-        lamas, setLamas,
-        ejes, setEjes,
-        guias, setGuias,
-        cajones, setCajones,
-        motores, setMotores,
-        accesorios, setAccesorios,
-        margins, setMargins,
-        history, saveBudget, deleteBudget
+        ...data,
+        history,
+        loading,
+        databaseError,
+        saveItem,
+        deleteItem,
+        saveBudget,
+        deleteBudget,
       }}
     >
       {children}
@@ -70,6 +149,7 @@ export function BudgetProvider({ children }) {
 }
 
 export function useBudget() {
-  return useContext(BudgetContext)
+  const context = useContext(BudgetContext)
+  if (!context) throw new Error("useBudget debe usarse dentro de BudgetProvider")
+  return context
 }
-

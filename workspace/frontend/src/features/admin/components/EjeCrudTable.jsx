@@ -5,18 +5,16 @@ import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 
 export default function EjeCrudTable() {
-  const { ejes, setEjes } = useBudget()
+  const { ejes, saveItem, deleteItem } = useBudget()
   const [newItem, setNewItem] = useState({ code: "", name: "", unit: "UN", price: 0 })
 
-  const handleAdd = () => {
+  const handleAdd = async () => {
     if (!newItem.code || !newItem.name) return
-    setEjes((prev) => [...prev, newItem])
+    await saveItem("ejes", newItem)
     setNewItem({ code: "", name: "", unit: "UN", price: 0 })
   }
 
-  const handleDelete = (code) => {
-    setEjes((prev) => prev.filter((item) => item.code !== code))
-  }
+  const handleDelete = (code) => deleteItem("ejes", code)
 
   return (
     <div className="flex flex-col gap-4 border border-zinc-800 p-4 rounded-lg bg-zinc-950/60 backdrop-blur-md">

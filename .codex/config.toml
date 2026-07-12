@@ -1,0 +1,7 @@
+[mcp_servers.context7]
+command = "npx"
+args = [
+    "-y",
+    "@context7/mcp-server",
+]
+env_vars = ["CONTEXT7_API_KEY"]

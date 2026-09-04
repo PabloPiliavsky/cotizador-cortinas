@@ -1,11 +1,11 @@
 import { useState } from "react"
-import { useBudget } from "../../../shared/providers/BudgetContext"
+import useCrud from "../hooks/useCrud"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 
 export default function MargenCrudTable() {
-  const { margins, saveItem, deleteItem } = useBudget()
+  const { items: margins, createItem, deleteItem } = useCrud("margins")
   const [newItem, setNewItem] = useState({ name: "", percentage: 0 })
 
   const handleAdd = async () => {
@@ -13,11 +13,11 @@ export default function MargenCrudTable() {
     const id = newItem.name.toLowerCase().replace(/\s+/g, "-")
     // Evitar ID duplicado
     if (margins.some(m => m.id === id)) return
-    await saveItem("margins", { ...newItem, id })
+    await createItem({ ...newItem, id })
     setNewItem({ name: "", percentage: 0 })
   }
 
-  const handleDelete = (id) => deleteItem("margins", id)
+  const handleDelete = (id) => deleteItem(id)
 
   return (
     <div className="flex flex-col gap-4 border border-zinc-800 p-4 rounded-lg bg-zinc-950/60 backdrop-blur-md">

@@ -1,20 +1,20 @@
 import { useState } from "react"
-import { useBudget } from "../../../shared/providers/BudgetContext"
+import useCrud from "../hooks/useCrud"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 
 export default function GuiaCrudTable() {
-  const { guias, saveItem, deleteItem } = useBudget()
+  const { items: guias, createItem, deleteItem } = useCrud("guias")
   const [newItem, setNewItem] = useState({ code: "", name: "", unit: "UN", profileWidth: 0.05, price: 0 })
 
   const handleAdd = async () => {
     if (!newItem.code || !newItem.name) return
-    await saveItem("guias", newItem)
+    await createItem(newItem)
     setNewItem({ code: "", name: "", unit: "UN", profileWidth: 0.05, price: 0 })
   }
 
-  const handleDelete = (code) => deleteItem("guias", code)
+  const handleDelete = (code) => deleteItem(code)
 
   return (
     <div className="flex flex-col gap-4 border border-zinc-800 p-4 rounded-lg bg-zinc-950/60 backdrop-blur-md">

@@ -1,20 +1,21 @@
 import { useState } from "react"
-import { useBudget } from "../../../shared/providers/BudgetContext"
+import useCrud from "../hooks/useCrud"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 
 export default function LamaCrudTable() {
-  const { lamas, accesorios, saveItem, deleteItem } = useBudget()
+  const { items: lamas, createItem, deleteItem } = useCrud("lamas")
+  const { items: accesorios } = useCrud("accesorios")
   const [newItem, setNewItem] = useState({ code: "", name: "", unit: "MTS", usefulHeight: 0.05, price: 0, requiredGasketCode: "" })
 
   const handleAdd = async () => {
     if (!newItem.code || !newItem.name) return
-    await saveItem("lamas", newItem)
+    await createItem(newItem)
     setNewItem({ code: "", name: "", unit: "MTS", usefulHeight: 0.05, price: 0, requiredGasketCode: "" })
   }
 
-  const handleDelete = (code) => deleteItem("lamas", code)
+  const handleDelete = (code) => deleteItem(code)
 
   const gaskets = accesorios.filter(a => a.code.startsWith("BUR") || a.name.toLowerCase().includes("burlete"))
 

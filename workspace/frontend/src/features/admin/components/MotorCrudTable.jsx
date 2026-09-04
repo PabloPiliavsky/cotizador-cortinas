@@ -1,21 +1,21 @@
 import { useState } from "react"
-import { useBudget } from "../../../shared/providers/BudgetContext"
+import useCrud from "../hooks/useCrud"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 
 export default function MotorCrudTable() {
-  const { motores, saveItem, deleteItem } = useBudget()
+  const { items: motores, createItem, deleteItem } = useCrud("motores")
   const [newItem, setNewItem] = useState({ code: "", name: "", price: 0, compatibleAcc: "" })
 
   const handleAdd = async () => {
     if (!newItem.code || !newItem.name) return
     const accList = newItem.compatibleAcc.split(",").map(s => s.trim()).filter(Boolean)
-    await saveItem("motores", { ...newItem, compatibleAcc: accList })
+    await createItem({ ...newItem, compatibleAcc: accList })
     setNewItem({ code: "", name: "", price: 0, compatibleAcc: "" })
   }
 
-  const handleDelete = (code) => deleteItem("motores", code)
+  const handleDelete = (code) => deleteItem(code)
 
   return (
     <div className="flex flex-col gap-4 border border-zinc-800 p-4 rounded-lg bg-zinc-950/60 backdrop-blur-md">

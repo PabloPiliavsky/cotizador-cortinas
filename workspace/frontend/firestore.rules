@@ -1,0 +1,22 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /{collectionName}/{documentId} {
+      allow read, write: if collectionName in [
+        'lamas',
+        'ejes',
+        'guias',
+        'cajones',
+        'motores',
+        'accesorios',
+        'margins',
+        'budget_history'
+      ];
+    }
+
+    match /app_config/initial_data {
+      allow read, write: if true;
+    }
+  }
+}

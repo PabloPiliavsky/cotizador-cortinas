@@ -1,12 +1,15 @@
 import {
   collection,
   doc,
+  getFirestore,
   getDocs,
   serverTimestamp,
   terminate,
   writeBatch,
 } from "firebase/firestore"
-import { db } from "../src/lib/firebase.js"
+import { initializeApp } from "firebase/app"
+import { loadEnv } from "vite"
+import { createFirebaseConfig } from "../src/lib/firebaseConfig.js"
 import {
   initialAccesorios,
   initialCajones,
@@ -16,6 +19,11 @@ import {
   initialMargins,
   initialMotores,
 } from "../src/shared/utils/seedData.js"
+
+const firebaseConfig = createFirebaseConfig(
+  loadEnv("development", process.cwd(), "VITE_"),
+)
+const db = getFirestore(initializeApp(firebaseConfig))
 
 const mockData = {
   lamas: initialLamas,

@@ -32,32 +32,34 @@ export default function LamaCrudTable() {
           {gaskets.map(g => <option key={g.code} value={g.code}>{g.name}</option>)}
         </select>
       </div>
-      <Button onClick={handleAdd} className="bg-blue-600 hover:bg-blue-500 text-white w-fit self-end">Agregar Lama</Button>
+      <Button onClick={handleAdd} disabled={!newItem.code || !newItem.name} className="bg-blue-600 hover:bg-blue-500 text-white font-semibold shadow-md shadow-blue-600/20 active:scale-[0.98] transition-all disabled:opacity-50 w-fit self-end">Agregar Lama</Button>
 
-      <Table>
-        <TableHeader className="border-zinc-800">
-          <TableRow className="border-zinc-800 hover:bg-transparent">
-            <TableHead className="text-zinc-400">Código</TableHead>
-            <TableHead className="text-zinc-400">Descripción</TableHead>
-            <TableHead className="text-zinc-400">Alto Útil</TableHead>
-            <TableHead className="text-zinc-400">Precio/m</TableHead>
-            <TableHead className="text-zinc-400 text-right">Acciones</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {lamas.map((item) => (
-            <TableRow key={item.code} className="border-zinc-800 hover:bg-zinc-900/40">
-              <TableCell className="text-zinc-200 font-mono">{item.code}</TableCell>
-              <TableCell className="text-zinc-200">{item.name}</TableCell>
-              <TableCell className="text-zinc-200 font-mono">{item.usefulHeight} m</TableCell>
-              <TableCell className="text-zinc-200 font-mono">${item.price.toFixed(2)} USD</TableCell>
-              <TableCell className="text-right">
-                <Button size="sm" variant="destructive" onClick={() => handleDelete(item.code)}>Eliminar</Button>
-              </TableCell>
+      <div className="rounded-md border border-zinc-800 overflow-hidden">
+        <Table>
+          <TableHeader className="bg-zinc-900/50 border-zinc-800">
+            <TableRow className="border-zinc-800 hover:bg-transparent">
+              <TableHead className="text-zinc-400">Código</TableHead>
+              <TableHead className="text-zinc-400">Descripción</TableHead>
+              <TableHead className="text-zinc-400">Alto Útil</TableHead>
+              <TableHead className="text-zinc-400">Precio/m</TableHead>
+              <TableHead className="text-zinc-400 text-right">Acciones</TableHead>
             </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+          </TableHeader>
+          <TableBody>
+            {lamas.map((item) => (
+              <TableRow key={item.code} className="border-zinc-800 hover:bg-zinc-800/60 transition-colors duration-150">
+                <TableCell className="text-zinc-200 font-mono text-xs">{item.code}</TableCell>
+                <TableCell className="text-zinc-200 font-medium text-xs">{item.name}</TableCell>
+                <TableCell className="text-zinc-200 font-mono text-xs">{item.usefulHeight} m</TableCell>
+                <TableCell className="text-zinc-200 font-mono text-xs">${item.price.toFixed(2)} USD</TableCell>
+                <TableCell className="text-right">
+                  <Button size="sm" variant="destructive" onClick={() => handleDelete(item.code)} className="bg-red-950/30 border border-red-900/50 text-red-300 hover:bg-red-600 hover:text-white transition-colors">Eliminar</Button>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
     </div>
   )
 }

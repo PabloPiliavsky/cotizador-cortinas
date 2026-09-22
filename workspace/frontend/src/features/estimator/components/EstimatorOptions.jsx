@@ -73,24 +73,37 @@ export default function EstimatorOptions({
       </div>
 
       <div className="flex flex-col gap-2 border-t border-zinc-800/60 pt-3">
-        <Label className="text-zinc-400">Accesorios y Componentes</Label>
-        <div className="grid grid-cols-2 gap-2">
+        <div className="flex justify-between items-center">
+          <Label className="text-zinc-300 font-medium">Accesorios y Componentes</Label>
+          <span className="text-[11px] font-mono text-zinc-400">
+            {selectedAccs.length} seleccionado(s)
+          </span>
+        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
           {accesorios.map(acc => {
             const isCompatible = selectedMotor?.compatibleAcc?.includes(acc.code)
+            const isChecked = selectedAccs.some(a => a.code === acc.code)
             return (
-              <label key={acc.code} className={`flex items-center gap-2 text-xs p-2 border rounded transition-opacity ${
+              <label key={acc.code} className={`flex items-center justify-between gap-2 text-xs p-2.5 border rounded-lg transition-all duration-150 ${
                 isCompatible 
-                  ? "bg-zinc-900/60 border-zinc-800/80 text-zinc-300 cursor-pointer" 
-                  : "bg-zinc-900/20 border-zinc-900/40 text-zinc-600 cursor-not-allowed opacity-40"
+                  ? isChecked
+                    ? "bg-blue-950/25 border-blue-500/70 text-zinc-100 shadow-xs cursor-pointer"
+                    : "bg-zinc-900/60 border-zinc-800/80 text-zinc-300 cursor-pointer hover:bg-zinc-800/80 hover:border-zinc-700 hover:text-white"
+                  : "bg-zinc-900/20 border-zinc-900/40 text-zinc-600 cursor-not-allowed opacity-35"
               }`}>
-                <input 
-                  type="checkbox" 
-                  disabled={!isCompatible}
-                  checked={selectedAccs.some(a => a.code === acc.code)} 
-                  onChange={(e) => handleAccChange(acc, e.target.checked)} 
-                  className="rounded border-zinc-800 bg-zinc-900 accent-blue-600 disabled:opacity-50" 
-                />
-                <span>{acc.name} (+${acc.price})</span>
+                <div className="flex items-center gap-2">
+                  <input 
+                    type="checkbox" 
+                    disabled={!isCompatible}
+                    checked={isChecked} 
+                    onChange={(e) => handleAccChange(acc, e.target.checked)} 
+                    className="rounded border-zinc-700 bg-zinc-900 accent-blue-600 disabled:opacity-50 cursor-pointer" 
+                  />
+                  <span>{acc.name}</span>
+                </div>
+                <span className="font-mono text-zinc-400 font-semibold text-[11px]">
+                  +${acc.price}
+                </span>
               </label>
             )
           })}

@@ -27,31 +27,33 @@ export default function MargenCrudTable() {
         <Input placeholder="Porcentaje (ej: 60 para +60%)" type="number" step="1" value={newItem.percentage} onChange={(e) => setNewItem({ ...newItem, percentage: parseFloat(e.target.value) || 0 })} className="bg-zinc-900 border-zinc-800 text-zinc-200" />
         <Button onClick={handleAdd} className="bg-blue-600 hover:bg-blue-500 text-white">Agregar Margen</Button>
       </div>
-      <Table>
-        <TableHeader className="border-zinc-800">
-          <TableRow className="border-zinc-800 hover:bg-transparent">
-            <TableHead className="text-zinc-400">Nombre</TableHead>
-            <TableHead className="text-zinc-400">Porcentaje de Recargo</TableHead>
-            <TableHead className="text-zinc-400 text-right">Acciones</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {margins?.map((item) => (
-            <TableRow key={item.id} className="border-zinc-800 hover:bg-zinc-900/40">
-              <TableCell className="text-zinc-200 font-semibold">{item.name}</TableCell>
-              <TableCell className="text-zinc-200 font-mono">+{item.percentage}%</TableCell>
-              <TableCell className="text-right">
-                {/* No permitir borrar los básicos de base para asegurar que siempre haya opciones */}
-                {item.id !== "gremio" && item.id !== "cliente" ? (
-                  <Button size="sm" variant="destructive" onClick={() => handleDelete(item.id)}>Eliminar</Button>
-                ) : (
-                  <span className="text-xs text-zinc-500 italic">Por defecto</span>
-                )}
-              </TableCell>
+      <div className="rounded-md border border-zinc-800 overflow-hidden">
+        <Table>
+          <TableHeader className="bg-zinc-900/50 border-zinc-800">
+            <TableRow className="border-zinc-800 hover:bg-transparent">
+              <TableHead className="text-zinc-400">Nombre</TableHead>
+              <TableHead className="text-zinc-400">Porcentaje de Recargo</TableHead>
+              <TableHead className="text-zinc-400 text-right">Acciones</TableHead>
             </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+          </TableHeader>
+          <TableBody>
+            {margins?.map((item) => (
+              <TableRow key={item.id} className="border-zinc-800 hover:bg-zinc-800/60 transition-colors duration-150">
+                <TableCell className="text-zinc-200 font-semibold text-xs">{item.name}</TableCell>
+                <TableCell className="text-zinc-200 font-mono text-xs">+{item.percentage}%</TableCell>
+                <TableCell className="text-right">
+                  {/* No permitir borrar los básicos de base para asegurar que siempre haya opciones */}
+                  {item.id !== "gremio" && item.id !== "cliente" ? (
+                    <Button size="sm" variant="destructive" onClick={() => handleDelete(item.id)} className="bg-red-950/30 border border-red-900/50 text-red-300 hover:bg-red-600 hover:text-white transition-colors">Eliminar</Button>
+                  ) : (
+                    <span className="text-xs text-zinc-500 italic">Por defecto</span>
+                  )}
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
     </div>
   )
 }

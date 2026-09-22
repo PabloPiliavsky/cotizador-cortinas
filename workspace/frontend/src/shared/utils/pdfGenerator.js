@@ -1,10 +1,10 @@
 import { jsPDF } from "jspdf"
+import drawPdfShutterDiagram from "./drawPdfShutterDiagram"
 
 export function generatePDF({ client, items, marginName, marginFactor }) {
   const doc = new jsPDF()
   doc.setFont("helvetica")
   
-  // Blue slate header background
   doc.setFillColor(30, 41, 59)
   doc.rect(0, 0, 210, 40, "F")
   
@@ -15,7 +15,6 @@ export function generatePDF({ client, items, marginName, marginFactor }) {
   doc.setFontSize(10)
   doc.text(`Fecha: ${new Date().toLocaleDateString()}`, 155, 25)
   
-  // Client & Margin section
   doc.setTextColor(30, 41, 59)
   doc.setFontSize(12)
   doc.setFont("helvetica", "bold")
@@ -33,7 +32,6 @@ export function generatePDF({ client, items, marginName, marginFactor }) {
   doc.text("DETALLE DE CORTINAS COTIZADAS", 15, y)
   y += 8
 
-  // Draw table header
   doc.setFillColor(241, 245, 249)
   doc.rect(15, y, 180, 7, "F")
   doc.setFont("helvetica", "bold")
@@ -53,7 +51,6 @@ export function generatePDF({ client, items, marginName, marginFactor }) {
     const factor = marginFactor || 1
     const itemCalcs = item.calcs
     
-    // Apply margin to each individual component
     const slatsWithMargin = itemCalcs.slatsCost * factor
     const guidesWithMargin = itemCalcs.guidesCost * factor
     const ejeWithMargin = itemCalcs.ejeCost * factor
@@ -65,7 +62,6 @@ export function generatePDF({ client, items, marginName, marginFactor }) {
     const itemTotal = unitPrice * item.qty
     grandTotal += itemTotal
 
-    // Estimamos la altura que ocupará este ítem (título + specs + desglose + espaciado)
     let neededSpace = 30
     if (guidesWithMargin > 0) neededSpace += 5
     if (cajonWithMargin > 0) neededSpace += 5
@@ -78,7 +74,6 @@ export function generatePDF({ client, items, marginName, marginFactor }) {
       y = 20
     }
 
-    // Dibujar recuadro de la cortina
     const finalBoxHeight = Math.max(38, neededSpace - 5)
     doc.setFillColor(248, 250, 252)
     doc.rect(15, y, 180, finalBoxHeight, "F")
@@ -100,24 +95,30 @@ export function generatePDF({ client, items, marginName, marginFactor }) {
     doc.setFont("helvetica", "normal")
     compY += 5
 
-    // Listar componentes detallados
-    doc.text(`• Lama/Tablilla: ${item.details.selectedLama?.name || "N/A"} - $${slatsWithMargin.toFixed(2)} USD`, 22, compY)
+    const details = item.details || item
+    const selectedLama = details.selectedLama || item.selectedLama
+    const selectedGuide = details.selectedGuide || item.selectedGuide
+    const selectedCajon = details.selectedCajon || item.selectedCajon
+    const selectedEje = details.selectedEje || item.selectedEje
+    const selectedMotor = details.selectedMotor || item.selectedMotor
+
+    doc.text(`• Lama/Tablilla: ${selectedLama?.name || "N/A"} - $${slatsWithMargin.toFixed(2)} USD`, 22, compY)
     compY += 5
 
     if (guidesWithMargin > 0) {
-      doc.text(`• Guías Laterales: ${item.details.selectedGuide?.name || "N/A"} - $${guidesWithMargin.toFixed(2)} USD`, 22, compY)
+      doc.text(`• Guías Laterales: ${selectedGuide?.name || "N/A"} - $${guidesWithMargin.toFixed(2)} USD`, 22, compY)
       compY += 5
     }
     if (cajonWithMargin > 0) {
-      doc.text(`• Cajón (Vuelo): ${item.details.selectedCajon?.name || "N/A"} - $${cajonWithMargin.toFixed(2)} USD`, 22, compY)
+      doc.text(`• Cajón (Vuelo): ${selectedCajon?.name || "N/A"} - $${cajonWithMargin.toFixed(2)} USD`, 22, compY)
       compY += 5
     }
     if (ejeWithMargin > 0) {
-      doc.text(`• Eje/Tubo: ${item.details.selectedEje?.name || "N/A"} - $${ejeWithMargin.toFixed(2)} USD`, 22, compY)
+      doc.text(`• Eje/Tubo: ${selectedEje?.name || "N/A"} - $${ejeWithMargin.toFixed(2)} USD`, 22, compY)
       compY += 5
     }
     if (motorWithMargin > 0) {
-      doc.text(`• Motorización: ${item.details.selectedMotor?.name || "N/A"} - $${motorWithMargin.toFixed(2)} USD`, 22, compY)
+      doc.text(`• Motorización: ${selectedMotor?.name || "N/A"} - $${motorWithMargin.toFixed(2)} USD`, 22, compY)
       compY += 5
     }
     if (accsWithMargin > 0) {
@@ -125,45 +126,8 @@ export function generatePDF({ client, items, marginName, marginFactor }) {
       compY += 5
     }
 
-    // --- DIBUJAR REPRESENTACIÓN VECTORIAL EN EL PDF ---
-    // Colocamos el diagrama a la derecha del recuadro
-    const drawX = 160
-    const drawY = y + 12
-    const drawW = 25
-    const drawH = 22
+    drawPdfShutterDiagram(doc, item, 160, y + 12)
 
-    // Fondo del vidrio
-    doc.setFillColor(224, 242, 254)
-    doc.rect(drawX, drawY, drawW, drawH, "F")
-    doc.setDrawColor(186, 230, 253)
-    doc.rect(drawX, drawY, drawW, drawH, "S")
-
-    // Lamas
-    doc.setFillColor(148, 163, 184)
-    doc.setDrawColor(100, 116, 139)
-    const slatW = item.details.hasGuides ? drawW + 2 : drawW
-    const slatX = item.details.hasGuides ? drawX - 1 : drawX
-    for (let idx = 0; idx < 6; idx++) {
-      doc.rect(slatX, drawY + idx * 3.5, slatW, 3, "FD")
-    }
-
-    // Guías
-    if (item.details.hasGuides) {
-      doc.setFillColor(71, 85, 105)
-      doc.rect(drawX - 2.5, drawY, 2.5, drawH, "F")
-      doc.rect(drawX + drawW, drawY, 2.5, drawH, "F")
-    }
-
-    // Cajón Compacto o Eje
-    if (item.details.hasVuelo) {
-      doc.setFillColor(30, 41, 59)
-      doc.rect(drawX - 3.5, drawY - 7, drawW + 7, 7, "F")
-    } else {
-      doc.setFillColor(148, 163, 184)
-      doc.circle(drawX + drawW / 2, drawY - 3.5, 3, "F")
-    }
-
-    // Precio Unitario y Subtotal al costado central derecho
     doc.setFont("helvetica", "bold")
     doc.setFontSize(8)
     doc.text(`Unit: $${unitPrice.toFixed(2)}`, 115, y + 8)
@@ -175,7 +139,6 @@ export function generatePDF({ client, items, marginName, marginFactor }) {
     y += Math.max(neededSpace, 43)
   })
 
-  // Grand Total
   if (y > 250) {
     doc.addPage()
     y = 30
@@ -192,4 +155,3 @@ export function generatePDF({ client, items, marginName, marginFactor }) {
   
   doc.save(`Presupuesto_${client.replace(/\s+/g, "_")}.pdf`)
 }
-

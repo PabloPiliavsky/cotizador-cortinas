@@ -1,8 +1,8 @@
 import { useState } from "react"
-import { useBudget } from "../../../shared/providers/BudgetContext"
+import { useBudget } from "@/shared/providers/BudgetContext"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { generatePDF } from "../../../shared/utils/pdfGenerator"
+import { generatePDF } from "@/shared/utils/pdfGenerator"
 
 export default function EstimatorSummary({
   items = [],
@@ -64,19 +64,19 @@ export default function EstimatorSummary({
         <span className="text-xs text-zinc-400 font-semibold">Tarifa / Margen</span>
         <div className="flex flex-wrap gap-2">
           {margins.map(m => (
-            <label key={m.id} className={`flex items-center gap-1.5 text-xs px-2.5 py-1.5 border rounded cursor-pointer transition-colors ${
+            <label key={m.id} className={`flex items-center gap-1.5 text-xs px-3 py-1.5 border rounded-lg cursor-pointer transition-all duration-150 ${
               selectedMarginId === m.id 
-                ? "bg-zinc-100 text-zinc-950 border-zinc-100" 
-                : "bg-zinc-900/60 text-zinc-300 border-zinc-800 hover:bg-zinc-800"
+                ? "bg-white text-zinc-950 border-white font-semibold shadow-sm" 
+                : "bg-zinc-900/70 text-zinc-300 border-zinc-800 hover:bg-zinc-800 hover:border-zinc-700 hover:text-white"
             }`}>
               <input type="radio" name="margin" checked={selectedMarginId === m.id} onChange={() => setSelectedMarginId(m.id)} className="hidden" />
               <span>{m.name}</span>
             </label>
           ))}
-          <label className={`flex items-center gap-1.5 text-xs px-2.5 py-1.5 border rounded cursor-pointer transition-colors ${
+          <label className={`flex items-center gap-1.5 text-xs px-3 py-1.5 border rounded-lg cursor-pointer transition-all duration-150 ${
             selectedMarginId === "custom" 
-              ? "bg-zinc-100 text-zinc-950 border-zinc-100" 
-              : "bg-zinc-900/60 text-zinc-300 border-zinc-800 hover:bg-zinc-800"
+              ? "bg-white text-zinc-950 border-white font-semibold shadow-sm" 
+              : "bg-zinc-900/70 text-zinc-300 border-zinc-800 hover:bg-zinc-800 hover:border-zinc-700 hover:text-white"
           }`}>
             <input type="radio" name="margin" checked={selectedMarginId === "custom"} onChange={() => setSelectedMarginId("custom")} className="hidden" />
             <span>Personalizado</span>
@@ -86,8 +86,8 @@ export default function EstimatorSummary({
         {selectedMarginId === "custom" && (
           <div className="mt-2 flex gap-2 items-center">
             <span className="text-xs text-zinc-400">Porcentaje:</span>
-            <Input type="number" min="0" value={customMarginPercentage} onChange={(e) => setCustomMarginPercentage(parseFloat(e.target.value) || 0)} className="bg-zinc-900 border-zinc-800 text-zinc-200 h-7 text-xs w-20" />
-            <span className="text-xs text-zinc-400">%</span>
+            <Input type="number" min="0" value={customMarginPercentage} onChange={(e) => setCustomMarginPercentage(parseFloat(e.target.value) || 0)} className="bg-zinc-900 border-zinc-800 text-zinc-200 h-8 text-xs w-24 hover:border-zinc-700 focus:border-blue-500 transition-colors" />
+            <span className="text-xs text-zinc-400 font-mono font-bold">%</span>
           </div>
         )}
       </div>
@@ -98,7 +98,7 @@ export default function EstimatorSummary({
           <span className="text-zinc-500 italic text-center py-2">No hay cortinas en el presupuesto</span>
         ) : (
           items.map(item => (
-            <div key={item.id} className="flex justify-between">
+            <div key={item.id} className="flex justify-between items-center p-1 rounded hover:bg-zinc-900/40 transition-colors">
               <span>{item.name} ({item.qty} un)</span>
               <span className="font-mono text-zinc-300">${((item.calcs?.total || 0) * marginFactor * item.qty).toFixed(2)}</span>
             </div>
@@ -112,10 +112,10 @@ export default function EstimatorSummary({
       </div>
 
       <div className="flex flex-col gap-2 mt-2">
-        <Input placeholder="Nombre del Cliente / Referencia" value={client} onChange={(e) => setClient(e.target.value)} className="bg-zinc-900 border-zinc-800 text-zinc-200" />
+        <Input placeholder="Nombre del Cliente / Referencia" value={client} onChange={(e) => setClient(e.target.value)} className="bg-zinc-900 border-zinc-800 text-zinc-200 hover:border-zinc-700 focus:border-blue-500 transition-colors" />
         <div className="grid grid-cols-2 gap-2">
-          <Button onClick={handleSave} disabled={!client || items.length === 0 || isBlocked} className="bg-emerald-600 hover:bg-emerald-500 text-white disabled:opacity-50">Guardar Presupuesto</Button>
-          <Button onClick={handleExport} disabled={items.length === 0 || isBlocked} className="bg-zinc-800 hover:bg-zinc-700 text-zinc-200 disabled:opacity-50">Exportar PDF</Button>
+          <Button onClick={handleSave} disabled={!client || items.length === 0 || isBlocked} className="bg-emerald-600 hover:bg-emerald-500 text-white font-semibold shadow-md shadow-emerald-600/20 active:scale-[0.98] transition-all disabled:opacity-50">Guardar Presupuesto</Button>
+          <Button onClick={handleExport} disabled={items.length === 0 || isBlocked} className="bg-zinc-800 hover:bg-zinc-700 hover:text-white hover:border-zinc-600 border border-zinc-700/60 text-zinc-200 shadow-sm active:scale-[0.98] transition-all disabled:opacity-50">Exportar PDF</Button>
         </div>
       </div>
     </div>

@@ -25,28 +25,30 @@ export default function EjeCrudTable() {
         <Input placeholder="Precio/UN" type="number" step="0.01" value={newItem.price} onChange={(e) => setNewItem({ ...newItem, price: parseFloat(e.target.value) || 0 })} className="bg-zinc-900 border-zinc-800 text-zinc-200" />
         <Button onClick={handleAdd} className="bg-blue-600 hover:bg-blue-500 text-white">Agregar</Button>
       </div>
-      <Table>
-        <TableHeader className="border-zinc-800">
-          <TableRow className="border-zinc-800 hover:bg-transparent">
-            <TableHead className="text-zinc-400">Código</TableHead>
-            <TableHead className="text-zinc-400">Descripción</TableHead>
-            <TableHead className="text-zinc-400">Precio/UN</TableHead>
-            <TableHead className="text-zinc-400 text-right">Acciones</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {ejes.map((item) => (
-            <TableRow key={item.code} className="border-zinc-800 hover:bg-zinc-900/40">
-              <TableCell className="text-zinc-200 font-mono">{item.code}</TableCell>
-              <TableCell className="text-zinc-200">{item.name}</TableCell>
-              <TableCell className="text-zinc-200 font-mono">${item.price.toFixed(2)} USD</TableCell>
-              <TableCell className="text-right">
-                <Button size="sm" variant="destructive" onClick={() => handleDelete(item.code)}>Eliminar</Button>
-              </TableCell>
+      <div className="rounded-md border border-zinc-800 overflow-hidden">
+        <Table>
+          <TableHeader className="bg-zinc-900/50 border-zinc-800">
+            <TableRow className="border-zinc-800 hover:bg-transparent">
+              <TableHead className="text-zinc-400">Código</TableHead>
+              <TableHead className="text-zinc-400">Descripción</TableHead>
+              <TableHead className="text-zinc-400">Precio/UN</TableHead>
+              <TableHead className="text-zinc-400 text-right">Acciones</TableHead>
             </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+          </TableHeader>
+          <TableBody>
+            {ejes.map((item) => (
+              <TableRow key={item.code} className="border-zinc-800 hover:bg-zinc-800/60 transition-colors duration-150">
+                <TableCell className="text-zinc-200 font-mono text-xs">{item.code}</TableCell>
+                <TableCell className="text-zinc-200 font-medium text-xs">{item.name}</TableCell>
+                <TableCell className="text-zinc-200 font-mono text-xs">${item.price.toFixed(2)} USD</TableCell>
+                <TableCell className="text-right">
+                  <Button size="sm" variant="destructive" onClick={() => handleDelete(item.code)} className="bg-red-950/30 border border-red-900/50 text-red-300 hover:bg-red-600 hover:text-white transition-colors">Eliminar</Button>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
     </div>
   )
 }

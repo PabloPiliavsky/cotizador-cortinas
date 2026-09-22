@@ -46,3 +46,10 @@ Este archivo mantiene un registro histórico de todas las tareas y cambios reali
 - Actualización de `.gitignore` global y de backend. Se excluyeron dependencias, `.sqlite`, y a pedido del usuario, las carpetas de `__tests__/`.
 - Inclusión de regla ASI en `MEMORY.md` para evitar el uso de puntos y comas (`;`) en JavaScript.
 - Inclusión de regla en `AGENT.md` y `workers/*_SOUL.md` para obligar a los agentes a explicar los cambios de cada archivo de forma detallada al terminar cada plan.
+
+## [2026-09-22] Mejoras Finales de UI, Modal de Compatibilidad, Testing y Refactorización SRP
+- **Testing y Calidad**: Configuración de Vitest, React Testing Library y jsdom. Creación de 7 suites de pruebas automatizadas con 24 tests cubriendo cálculos matemáticos, burletes obligatorios, compatibilidad de motores, persistencia en Firestore, generación de PDF y Splash Screen.
+- **Splash Screen de Bienvenida**: Creación de `SplashScreen.jsx` con animación de crecimiento, contracción y desvanecimiento del logo de COR Metalconf para la presentación visual.
+- **Modal de Compatibilidad Motor-Accesorios**: Creación de `MotorCompatibilityModal.jsx` y `AccessoryChecklist.jsx`, reemplazando el input de texto manual por un diálogo accesible con checkboxes, búsqueda y filtros.
+- **Auditoría y Estilos Hover**: Corrección de estados hover con contraste nítido en pestañas de cortinas (`CurtainTabs`), selectores de tarifas (`EstimatorSummary`), desglose (`CurtainBreakdown`), accesorios y tablas CRUD.
+- **Refactorización Modular (SRP)**: Desacoplamiento de `EstimatorPage.jsx` hacia `useCurtainManager.js` y `CurtainEditorCard.jsx`, de `MotorCrudTable.jsx` hacia `MotorCreateForm.jsx`, y de `pdfGenerator.js` hacia `drawPdfShutterDiagram.js`. Todos los componentes cumplen con la norma de $\le 100$ líneas de vista.

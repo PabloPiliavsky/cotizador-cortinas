@@ -4,7 +4,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 
-export default function GuiaCrudTable() {
+export default function GuiaCrudTable({ canEdit = true }) {
   const { items: guias, createItem, deleteItem } = useCrud("guias")
   const [newItem, setNewItem] = useState({ code: "", name: "", unit: "UN", profileWidth: 0.05, price: 0 })
 
@@ -19,13 +19,15 @@ export default function GuiaCrudTable() {
   return (
     <div className="flex flex-col gap-4 border border-zinc-800 p-4 rounded-lg bg-zinc-950/60 backdrop-blur-md">
       <h3 className="text-lg font-semibold text-zinc-100">Guías Laterales</h3>
-      <div className="grid grid-cols-5 gap-2">
-        <Input placeholder="Código" value={newItem.code} onChange={(e) => setNewItem({ ...newItem, code: e.target.value })} className="bg-zinc-900 border-zinc-800 text-zinc-200" />
-        <Input placeholder="Nombre" value={newItem.name} onChange={(e) => setNewItem({ ...newItem, name: e.target.value })} className="bg-zinc-900 border-zinc-800 text-zinc-200" />
-        <Input placeholder="Ancho Guía (m)" type="number" step="0.001" value={newItem.profileWidth} onChange={(e) => setNewItem({ ...newItem, profileWidth: parseFloat(e.target.value) || 0 })} className="bg-zinc-900 border-zinc-800 text-zinc-200" />
-        <Input placeholder="Precio/UN" type="number" step="0.01" value={newItem.price} onChange={(e) => setNewItem({ ...newItem, price: parseFloat(e.target.value) || 0 })} className="bg-zinc-900 border-zinc-800 text-zinc-200" />
-        <Button onClick={handleAdd} className="bg-blue-600 hover:bg-blue-500 text-white">Agregar</Button>
-      </div>
+      {canEdit && (
+        <div className="grid grid-cols-5 gap-2">
+          <Input placeholder="Código" value={newItem.code} onChange={(e) => setNewItem({ ...newItem, code: e.target.value })} className="bg-zinc-900 border-zinc-800 text-zinc-200" />
+          <Input placeholder="Nombre" value={newItem.name} onChange={(e) => setNewItem({ ...newItem, name: e.target.value })} className="bg-zinc-900 border-zinc-800 text-zinc-200" />
+          <Input placeholder="Ancho Guía (m)" type="number" step="0.001" value={newItem.profileWidth} onChange={(e) => setNewItem({ ...newItem, profileWidth: parseFloat(e.target.value) || 0 })} className="bg-zinc-900 border-zinc-800 text-zinc-200" />
+          <Input placeholder="Precio/UN" type="number" step="0.01" value={newItem.price} onChange={(e) => setNewItem({ ...newItem, price: parseFloat(e.target.value) || 0 })} className="bg-zinc-900 border-zinc-800 text-zinc-200" />
+          <Button onClick={handleAdd} className="bg-blue-600 hover:bg-blue-500 text-white">Agregar</Button>
+        </div>
+      )}
       <div className="rounded-md border border-zinc-800 overflow-hidden">
         <Table>
           <TableHeader className="bg-zinc-900/50 border-zinc-800">
@@ -34,7 +36,7 @@ export default function GuiaCrudTable() {
               <TableHead className="text-zinc-400">Descripción</TableHead>
               <TableHead className="text-zinc-400">Ancho Perfil</TableHead>
               <TableHead className="text-zinc-400">Precio/UN</TableHead>
-              <TableHead className="text-zinc-400 text-right">Acciones</TableHead>
+              {canEdit && <TableHead className="text-zinc-400 text-right">Acciones</TableHead>}
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -44,9 +46,11 @@ export default function GuiaCrudTable() {
                 <TableCell className="text-zinc-200 font-medium text-xs">{item.name}</TableCell>
                 <TableCell className="text-zinc-200 font-mono text-xs">{item.profileWidth} m</TableCell>
                 <TableCell className="text-zinc-200 font-mono text-xs">${item.price.toFixed(2)} USD</TableCell>
-                <TableCell className="text-right">
-                  <Button size="sm" variant="destructive" onClick={() => handleDelete(item.code)} className="bg-red-950/30 border border-red-900/50 text-red-300 hover:bg-red-600 hover:text-white transition-colors">Eliminar</Button>
-                </TableCell>
+                {canEdit && (
+                  <TableCell className="text-right">
+                    <Button size="sm" variant="destructive" onClick={() => handleDelete(item.code)} className="bg-red-950/30 border border-red-900/50 text-red-300 hover:bg-red-600 hover:text-white transition-colors">Eliminar</Button>
+                  </TableCell>
+                )}
               </TableRow>
             ))}
           </TableBody>

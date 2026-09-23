@@ -3,10 +3,12 @@ import useCrud from "../hooks/useCrud"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
+import EditElementModal from "./EditElementModal"
 
 export default function MargenCrudTable({ canEdit = true }) {
-  const { items: margins, createItem, deleteItem } = useCrud("margins")
+  const { items: margins, createItem, updateItem, deleteItem } = useCrud("margins")
   const [newItem, setNewItem] = useState({ name: "", percentage: 0 })
+  const [editTarget, setEditTarget] = useState(null)
 
   const handleAdd = async () => {
     if (!newItem.name) return
@@ -44,11 +46,14 @@ export default function MargenCrudTable({ canEdit = true }) {
                 <TableCell className="text-zinc-200 font-mono text-xs">+{item.percentage}%</TableCell>
                 {canEdit && (
                   <TableCell className="text-right">
-                    {item.id !== "gremio" && item.id !== "cliente" ? (
-                      <Button size="sm" variant="destructive" onClick={() => handleDelete(item.id)} className="bg-red-950/30 border border-red-900/50 text-red-300 hover:bg-red-600 hover:text-white transition-colors">Eliminar</Button>
-                    ) : (
-                      <span className="text-xs text-zinc-500 italic">Por defecto</span>
-                    )}
+                    <div className="flex gap-2 justify-end">
+                      <Button size="sm" variant="outline" onClick={() => setEditTarget(item)} className="border-zinc-700 bg-zinc-900 text-zinc-200 hover:bg-zinc-800 hover:text-white text-xs">Editar</Button>
+                      {item.id !== "gremio" && item.id !== "cliente" ? (
+                        <Button size="sm" variant="destructive" onClick={() => handleDelete(item.id)} className="bg-red-950/30 border border-red-900/50 text-red-300 hover:bg-red-600 hover:text-white transition-colors">Eliminar</Button>
+                      ) : (
+                        <span className="text-xs text-zinc-500 italic py-1">Por defecto</span>
+                      )}
+                    </div>
                   </TableCell>
                 )}
               </TableRow>
@@ -56,6 +61,8 @@ export default function MargenCrudTable({ canEdit = true }) {
           </TableBody>
         </Table>
       </div>
+
+      <EditElementModal item={editTarget} onClose={() => setEditTarget(null)} onSave={updateItem} open={Boolean(editTarget)} type="margen" />
     </div>
   )
 }

@@ -3,11 +3,13 @@ import useCrud from "../hooks/useCrud"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
+import EditElementModal from "./EditElementModal"
 
 export default function LamaCrudTable({ canEdit = true }) {
-  const { items: lamas, createItem, deleteItem } = useCrud("lamas")
+  const { items: lamas, createItem, updateItem, deleteItem } = useCrud("lamas")
   const { items: accesorios } = useCrud("accesorios")
   const [newItem, setNewItem] = useState({ code: "", name: "", unit: "MTS", usefulHeight: 0.05, price: 0, requiredGasketCode: "" })
+  const [editTarget, setEditTarget] = useState(null)
 
   const handleAdd = async () => {
     if (!newItem.code || !newItem.name) return
@@ -57,7 +59,10 @@ export default function LamaCrudTable({ canEdit = true }) {
                 <TableCell className="text-zinc-200 font-mono text-xs">${item.price.toFixed(2)} USD</TableCell>
                 {canEdit && (
                   <TableCell className="text-right">
-                    <Button size="sm" variant="destructive" onClick={() => handleDelete(item.code)} className="bg-red-950/30 border border-red-900/50 text-red-300 hover:bg-red-600 hover:text-white transition-colors">Eliminar</Button>
+                    <div className="flex gap-2 justify-end">
+                      <Button size="sm" variant="outline" onClick={() => setEditTarget(item)} className="border-zinc-700 bg-zinc-900 text-zinc-200 hover:bg-zinc-800 hover:text-white text-xs">Editar</Button>
+                      <Button size="sm" variant="destructive" onClick={() => handleDelete(item.code)} className="bg-red-950/30 border border-red-900/50 text-red-300 hover:bg-red-600 hover:text-white transition-colors">Eliminar</Button>
+                    </div>
                   </TableCell>
                 )}
               </TableRow>
@@ -65,6 +70,8 @@ export default function LamaCrudTable({ canEdit = true }) {
           </TableBody>
         </Table>
       </div>
+
+      <EditElementModal accesorios={accesorios} item={editTarget} onClose={() => setEditTarget(null)} onSave={updateItem} open={Boolean(editTarget)} type="lama" />
     </div>
   )
 }

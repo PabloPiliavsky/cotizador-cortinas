@@ -2,8 +2,12 @@ rules_version = '2';
 
 service cloud.firestore {
   match /databases/{database}/documents {
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
     match /{collectionName}/{documentId} {
-      allow read, write: if collectionName in [
+      allow read, write: if isSignedIn() && collectionName in [
         'lamas',
         'ejes',
         'guias',
@@ -16,7 +20,7 @@ service cloud.firestore {
     }
 
     match /app_config/initial_data {
-      allow read, write: if true;
+      allow read, write: if isSignedIn();
     }
   }
 }

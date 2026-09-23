@@ -1,10 +1,33 @@
-import { useState } from "react"
+import { useCallback, useState } from "react"
+import { LogOut } from "lucide-react"
 import { BudgetProvider } from "./shared/providers/BudgetContext"
+import LoginPage from "./features/auth/components/LoginPage"
+import SplashScreen from "./features/auth/components/SplashScreen"
 import EstimatorPage from "./features/estimator/components/EstimatorPage"
 import ConfigCrud from "./features/admin/components/ConfigCrud"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Button } from "@/components/ui/button"
+import { useAuth } from "@/shared/providers/AuthContext"
 
 export default function App() {
+  const { loading, logout, user } = useAuth()
+  const [showSplash, setShowSplash] = useState(false)
+  const accountLabel = user?.displayName || user?.email || "Usuario conectado"
+  const handleAuthenticated = useCallback(() => setShowSplash(true), [])
+  const handleSplashComplete = useCallback(() => setShowSplash(false), [])
+
+  function handleLogout() {
+    logout().catch(() => undefined)
+  }
+
+  if (loading) {
+    return <main className="flex min-h-screen items-center justify-center bg-zinc-950 font-mono text-sm text-zinc-400">Cargando sesión...</main>
+  }
+
+  if (!user) return <LoginPage onAuthenticated={handleAuthenticated} />
+
+  if (showSplash) return <SplashScreen onComplete={handleSplashComplete} />
+
   return (
     <BudgetProvider>
       <main className="min-h-screen bg-zinc-950 text-zinc-50 flex flex-col font-sans pb-12">
@@ -14,7 +37,13 @@ export default function App() {
               <span className="bg-blue-600 text-xs px-2 py-1 rounded text-white font-mono">COR</span>
               Metalconf Cotizador
             </h1>
-            <span className="text-xs text-zinc-400 font-mono">v1.1.0</span>
+            <div className="flex items-center gap-3">
+              <span className="max-w-40 truncate font-mono text-xs text-zinc-400" title={accountLabel}>{accountLabel}</span>
+              <Button className="border-zinc-700 bg-zinc-900 text-zinc-200 hover:bg-zinc-800 hover:text-white" onClick={handleLogout} size="sm" type="button" variant="outline">
+                <LogOut data-icon="inline-start" />
+                Cerrar Sesión
+              </Button>
+            </div>
           </div>
         </header>
 

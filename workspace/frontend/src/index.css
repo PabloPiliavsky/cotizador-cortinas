@@ -126,5 +126,22 @@
     }
   html {
     @apply font-sans;
-    }
+  }
+}
+
+@keyframes auth-splash-logo {
+  0% { opacity: 1; transform: scale(1); }
+  42% { opacity: 1; transform: scale(1.16); }
+  72% { opacity: 1; transform: scale(0.88); }
+  100% { opacity: 0; transform: scale(0.88); }
+}
+
+.auth-splash-logo {
+  animation: auth-splash-logo 850ms ease-in-out forwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .auth-splash-logo {
+    animation-duration: 1ms;
+  }
 }

@@ -11,7 +11,24 @@ const firebaseMocks = vi.hoisted(() => ({
 }))
 
 vi.mock("firebase/auth", () => firebaseMocks)
-vi.mock("@/lib/firebase", () => ({ auth: firebaseMocks.auth }))
+vi.mock("@/lib/firebase", () => ({ auth: firebaseMocks.auth, db: {} }))
+vi.mock("@/features/auth/services/userService", () => ({
+  ROLES: { MASTER: "master", EMPLEADO: "empleado" },
+  getInitialRoleForEmail: (email) => (email === "admin@propulsa.com" ? "master" : "empleado"),
+  seedInitialAdminUsers: vi.fn(),
+  subscribeToUserProfile: (user, callback) => {
+    callback({
+      uid: user.uid,
+      email: user.email,
+      role: emailRole(user.email),
+    })
+    return vi.fn()
+  },
+}))
+
+function emailRole(email) {
+  return email === "admin@propulsa.com" ? "master" : "empleado"
+}
 
 let authStateListener
 
@@ -35,17 +52,19 @@ async function renderAuthHook() {
 }
 
 it("inicia sesión y actualiza el usuario cuando cambia el estado de Firebase", async () => {
-  const user = { email: "demo@persianas.com", uid: "user-1" }
+  const user = { email: "admin@propulsa.com", uid: "user-admin" }
   firebaseMocks.signInWithEmailAndPassword.mockResolvedValue({ user })
   const { result } = await renderAuthHook()
 
   await act(async () => {
-    await result.current.login(user.email, "Demo1234")
+    await result.current.login(user.email, "Admin123")
   })
   act(() => authStateListener(user))
 
-  expect(firebaseMocks.signInWithEmailAndPassword).toHaveBeenCalledWith(firebaseMocks.auth, user.email, "Demo1234")
+  expect(firebaseMocks.signInWithEmailAndPassword).toHaveBeenCalledWith(firebaseMocks.auth, user.email, "Admin123")
   expect(result.current.user).toEqual(user)
+  expect(result.current.isMaster).toBe(true)
+  expect(result.current.isEmpleado).toBe(false)
 })
 
 it("guarda y propaga los errores de credenciales", async () => {

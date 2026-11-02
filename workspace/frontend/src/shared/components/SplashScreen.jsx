@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react"
 
-export default function SplashScreen({ onFinish, duration = 1600 }) {
+export default function SplashScreen({ onFinish, onComplete, duration = 1600 }) {
   const [phase, setPhase] = useState("enter") // "enter" -> "pulse" -> "exit" -> "hidden"
+  const notifyComplete = onFinish || onComplete
 
   useEffect(() => {
     // Fase 1: Escala inicial y crecimiento (0 - 600ms)
@@ -17,7 +18,7 @@ export default function SplashScreen({ onFinish, duration = 1600 }) {
     // Fase 3: Desvanecimiento final (1100 - 1500ms)
     const t3 = setTimeout(() => {
       setPhase("hidden")
-      if (onFinish) onFinish()
+      if (notifyComplete) notifyComplete()
     }, duration)
 
     return () => {
@@ -25,13 +26,13 @@ export default function SplashScreen({ onFinish, duration = 1600 }) {
       clearTimeout(t2)
       clearTimeout(t3)
     }
-  }, [duration, onFinish])
+  }, [duration, notifyComplete])
 
   if (phase === "hidden") return null
 
   const handleSkip = () => {
     setPhase("hidden")
-    if (onFinish) onFinish()
+    if (notifyComplete) notifyComplete()
   }
 
   return (
